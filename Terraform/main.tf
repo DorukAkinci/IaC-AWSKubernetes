@@ -23,7 +23,7 @@ data "aws_subnet_ids" "all" {
 data "aws_ami" "eks-worker" {
   filter {
     name   = "name"
-    values = ["amazon-eks-node-v*"]
+    values = ["amazon-eks-node-1.12*"]
   }
 
   most_recent = true

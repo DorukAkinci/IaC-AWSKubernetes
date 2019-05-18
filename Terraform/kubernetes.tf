@@ -22,7 +22,7 @@ locals {
   tf-eks-node-userdata = <<USERDATA
 #!/bin/bash
 set -o xtrace
-/etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.demo.endpoint}' --b64-cluster-ca '${aws_eks_cluster.demo.certificate_authority.0.data}' '${var.kubernetes_cluster_name}'
+/etc/eks/bootstrap.sh --apiserver-endpoint '${aws_eks_cluster.tf_eks.endpoint}' --b64-cluster-ca '${aws_eks_cluster.tf_eks.certificate_authority.0.data}' '${var.kubernetes_cluster_name}'
 USERDATA
 }
 
@@ -42,10 +42,10 @@ resource "aws_launch_configuration" "tf_eks" {
 }
 
 resource "aws_autoscaling_group" "tf_eks" {
-  desired_capacity     = "2"
+  desired_capacity     = "1"
   launch_configuration = "${aws_launch_configuration.tf_eks.id}"
-  max_size             = "2"
-  min_size             = "2"
+  max_size             = "1"
+  min_size             = "1"
   name                 = "terraform-tf-eks"
   vpc_zone_identifier  = ["${data.aws_subnet_ids.all.ids}"]
  
