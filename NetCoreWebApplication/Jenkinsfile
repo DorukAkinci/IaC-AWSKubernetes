@@ -1,0 +1,41 @@
+pipeline {
+ agent any
+ 
+ stages {
+  stage('Checkout') {
+   steps {
+        git url: 'https://github.com/DorukAkinci/IaC-AWSKubernetes.git'
+   }
+  }
+  stage('Restore PACKAGES') {
+   steps {
+      dir("NetCoreWebApplication/SampleWebApiAspNetCore"){
+        sh "dotnet restore"
+      }
+   }
+  }
+  stage('Clean') {
+   steps { 
+      dir("NetCoreWebApplication/SampleWebApiAspNetCore"){
+        sh 'dotnet clean'
+      }
+   }
+  }
+  stage('DotNet Build') {
+      steps {
+         dir("NetCoreWebApplication/SampleWebApiAspNetCore"){
+          sh "dotnet publish -c Release -o output"
+         }
+      }
+  }
+  stage('Docker Build') {
+   steps {
+      dir("NetCoreWebApplication/"){
+         script{
+            docker.build('dorukakinci/netcore-demo-restwebapplication')
+         }
+      }
+   }
+  }
+ }
+} 
