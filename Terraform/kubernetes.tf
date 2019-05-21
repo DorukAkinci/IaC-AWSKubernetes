@@ -7,6 +7,11 @@ resource "aws_eks_cluster" "tf_eks" {
     subnet_ids         = ["${data.aws_subnet_ids.all.ids}"]
   }
 
+  # WAITING FOR CLUSTER TO BE READY // SLEEP IS TESTED ON UBUNTU BASED LOCALHOST
+  provisioner "local-exec" {
+      command = "sleep 60"
+  }
+
   depends_on = [
     "aws_iam_role_policy_attachment.tf-cluster-AmazonEKSClusterPolicy",
     "aws_iam_role_policy_attachment.tf-cluster-AmazonEKSServicePolicy",
